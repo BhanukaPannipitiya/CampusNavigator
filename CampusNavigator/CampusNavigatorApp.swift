@@ -12,7 +12,6 @@ struct CampusNavigatorApp: App {
     var body: some Scene {
         WindowGroup {
             SplashScreenView()
-            //HomeView()
         }
     }
 }
