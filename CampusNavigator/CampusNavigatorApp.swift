@@ -11,7 +11,8 @@ import SwiftUI
 struct CampusNavigatorApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            SplashScreenView()
+            //HomeView()
         }
     }
 }
