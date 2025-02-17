@@ -32,7 +32,7 @@ struct LoginView: View {
                             .padding(.leading, 20)
                     }
                     
-                    TextField(
+                    CustomTextField(
                         text: $email,
                         isKeyboardVisible: $isKeyboardVisible,
                         placeholder: "ex.yr3cobsccomp232f-001",
@@ -70,7 +70,7 @@ struct LoginView: View {
                 .padding(.bottom, isKeyboardVisible ? geometry.safeAreaInsets.bottom : 0)
             }
         }
-        .padding()
+        .padding(.top,20)
         .frame(maxHeight: .infinity)
         .onTapGesture {
             self.isKeyboardVisible = false
