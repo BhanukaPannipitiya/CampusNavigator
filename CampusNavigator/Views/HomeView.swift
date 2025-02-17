@@ -94,6 +94,8 @@ struct HomeView: View {
                 switch feature {
                 case "AR Navigator":
                     ARNavigatorView()
+                case "Events":
+                    EventsView()
                 default:
                     EmptyView()
                 }
