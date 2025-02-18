@@ -96,6 +96,8 @@ struct HomeView: View {
                     ARNavigatorView()
                 case "Events":
                     EventsView()
+                case "Activity Map":
+                    ActivityMapView()
                 default:
                     EmptyView()
                 }
