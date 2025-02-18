@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TextField: View {
+struct CustomTextField: View {
     @Binding var text: String
     @Binding var isKeyboardVisible: Bool
     var placeholder: String
