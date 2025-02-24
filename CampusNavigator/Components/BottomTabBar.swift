@@ -6,64 +6,47 @@
 //
 
 import SwiftUI
-import UIKit
+
+enum TabItem: String, CaseIterable {
+    case home = "Home"
+    case map = "Map"
+    case emergency = "Emergency"
+}
+
 
 struct BottomTabBar: View {
-    @Binding var selectedTab: Int
+    @Binding var selectedTab: TabItem
     
     var body: some View {
         HStack {
-            Spacer()
-            TabButton(icon: "house", title: "Home", tabIndex: 0, selectedTab: $selectedTab)
-            Spacer()
-            TabButton(icon: "magnifyingglass", title: "Search", tabIndex: 1, selectedTab: $selectedTab)
-            Spacer()
-            TabButton(icon: "person", title: "Profile", tabIndex: 2, selectedTab: $selectedTab)
-            Spacer()
+            ForEach(TabItem.allCases, id: \.self) { item in
+                Button(action: {
+                    selectedTab = item
+                }) {
+                    VStack {
+                        Image(systemName: iconName(for: item))
+                            .font(.title2)
+                        Text(item.rawValue)
+                            .font(.caption)
+                    }
+                    .foregroundColor(selectedTab == item ? .blue : .gray)
+                    .frame(maxWidth: .infinity)
+                }
+            }
         }
-        .padding(.vertical, 10)
-        .frame(maxWidth: .infinity, maxHeight: 54)
-        .background(
-            // Glass effect using Blur and Opacity
-            BlurView(style: .systemMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 25)) // Rounded corners
-                .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 4) // Soft shadow
-                .padding(.horizontal, 16) // Padding to make it float a bit
-        )
+        .padding(.top)
+        .frame(height: 70)
+        .background(Color(.systemBackground))
+        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: -5)
     }
-}
-
-struct TabButton: View {
-    let icon: String
-    let title: String
-    let tabIndex: Int
-    @Binding var selectedTab: Int
-
-    var body: some View {
-        VStack {
-            Image(systemName: icon)
-                .font(.system(size: 20))
-                .foregroundColor(selectedTab == tabIndex ? .blue : .gray)
-            Text(title)
-                .font(.caption)
-                .foregroundColor(selectedTab == tabIndex ? .blue : .gray)
-        }
-        .padding()
-        .onTapGesture {
-            selectedTab = tabIndex
+    
+    private func iconName(for tab: TabItem) -> String {
+        switch tab {
+        case .home: return "house.fill"
+        case .map: return "map.fill"
+        case .emergency: return "exclamationmark.triangle.fill"
         }
     }
-}
-
-struct BlurView: UIViewRepresentable {
-    var style: UIBlurEffect.Style
-
-    func makeUIView(context: Context) -> UIVisualEffectView {
-        let view = UIVisualEffectView(effect: UIBlurEffect(style: style))
-        return view
-    }
-
-    func updateUIView(_ uiView: UIVisualEffectView, context: Context) {}
 }
 
 
