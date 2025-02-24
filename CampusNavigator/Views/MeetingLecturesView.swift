@@ -61,7 +61,7 @@ struct MeetingLecturesView: View {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.gray)
                         
-                        TextField("Search lecturers", text: $searchText)
+                        TextField("Search by lecturers name", text: $searchText)
                             .textFieldStyle(PlainTextFieldStyle())
                             .padding(.vertical, 10)
                             .disableAutocorrection(true)
