@@ -11,7 +11,7 @@ struct HomeView: View {
         GridItem(.flexible(), spacing: 20)
     ]
     
-    @State private var selectedTab = 0
+    @State private var selectedTab: TabItem = .home
     @State private var selectedFeature: String?
     
     let backgroundGradient = LinearGradient(
@@ -117,7 +117,7 @@ struct HomeView: View {
                     Spacer()
                 }
                 
-//                BottomTabBar(selectedTab: $selectedTab)
+                
                 
             }
             .padding(.horizontal)
@@ -138,6 +138,7 @@ struct HomeView: View {
                     EmptyView()
                 }
             }
+            BottomTabBar(selectedTab: $selectedTab)
         }
     }
     
@@ -179,7 +180,7 @@ struct HomeView: View {
             return [Color.gray.opacity(0.8), Color.gray.opacity(0.6)]
         }
     }
-
+    
     
     private func iconName(for feature: String) -> String {
         switch feature {
