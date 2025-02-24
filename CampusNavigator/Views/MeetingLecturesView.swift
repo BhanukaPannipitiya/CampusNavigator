@@ -102,11 +102,6 @@ struct LecturerCard: View {
     
     var body: some View {
         LabelTextField(title: lecturer.title, description: lecturer.description)
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color.mint, lineWidth: 0.5)
-            )
-            
     }
 }
 

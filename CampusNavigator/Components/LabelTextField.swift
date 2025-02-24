@@ -28,6 +28,10 @@ struct LabelTextField: View {
         .background(Color(.systemGray6))
         .cornerRadius(20)
         .shadow(radius: 1)
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(Color.mint, lineWidth: 0.8)
+        )
     }
 }
 
@@ -40,5 +44,6 @@ struct LabelTextField_Previews: PreviewProvider {
         )
         .previewLayout(.sizeThatFits)
         .padding()
+        
     }
 }
