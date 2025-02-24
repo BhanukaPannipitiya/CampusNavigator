@@ -29,15 +29,15 @@ struct BottomTabBar: View {
                         Text(item.rawValue)
                             .font(.caption)
                     }
-                    .foregroundColor(selectedTab == item ? .blue : .gray)
+                    .foregroundColor(selectedTab == item ? .mint : .gray)
                     .frame(maxWidth: .infinity)
                 }
             }
         }
-        .padding(.top)
-        .frame(height: 70)
-        .background(Color(.systemBackground))
+        .padding(.top,20)
+        .frame(height: 30)
         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: -5)
+        
     }
     
     private func iconName(for tab: TabItem) -> String {
@@ -50,3 +50,10 @@ struct BottomTabBar: View {
 }
 
 
+struct BottomTabBar_Previews: PreviewProvider {
+    static var previews: some View {
+        BottomTabBar(selectedTab: .constant(.home))
+            .previewLayout(.sizeThatFits)
+            .padding()
+    }
+}
