@@ -72,7 +72,7 @@ struct EventsView: View {
             }) {
                 Image(systemName: "plus.circle.fill")
                     .font(.system(size: 60))
-                    .foregroundColor(.blue)
+                    .foregroundColor(.mint)
                     .padding()
             }
             .frame(maxWidth: .infinity, alignment: .bottomTrailing)
