@@ -101,7 +101,11 @@ struct LecturerCard: View {
     let lecturer: Lecturer
     
     var body: some View {
-        LabelTextField(title: lecturer.title, description: lecturer.description)
+        LabelTextField(
+            title: lecturer.title,
+            description: lecturer.description,
+            destination: AnyView(ScheduleMeetingView(lecturer: lecturer))
+        )
     }
 }
 
