@@ -17,6 +17,7 @@ struct MeetingLecturesView: View {
     @State private var selectedLecturer: Lecturer? = nil
     @State private var isEventDetailPresented = false
     @State private var isAddEventPresented = false
+    @State private var searchText: String = ""
     
     let lecturers: [Lecturer] = [
         Lecturer(title: "Dr. John Jhones", description: "Schedule a meeting about course selection"),
@@ -25,6 +26,14 @@ struct MeetingLecturesView: View {
         Lecturer(title: "Dr. Michael Brown", description: "Consult about academic progress"),
         Lecturer(title: "Dr. Lisa Taylor", description: "Talk about internship possibilities")
     ]
+    
+    var filteredLecturers: [Lecturer] {
+            if searchText.isEmpty {
+                return lecturers
+            } else {
+                return lecturers.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+            }
+        }
     
     var body: some View {
         NavigationView {
@@ -47,10 +56,27 @@ struct MeetingLecturesView: View {
                     .padding(.horizontal, 20)
                     .padding(.bottom, 15)
                     
+                    // Search Bar
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.gray)
+                        
+                        TextField("Search lecturers", text: $searchText)
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .padding(.vertical, 10)
+                            .disableAutocorrection(true)
+                    }
+                    .padding(.horizontal, 15)
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 10)
+                    
                     // Lecturers List
                     ScrollView {
                         VStack(spacing: 15) {
-                            ForEach(lecturers) { lecturer in
+                            ForEach(filteredLecturers) { lecturer in
                                 LecturerCard(lecturer: lecturer)
                                     .onTapGesture {
                                         selectedLecturer = lecturer
