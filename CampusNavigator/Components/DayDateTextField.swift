@@ -12,17 +12,27 @@ struct DayDateTextField: View {
     let time: String
     
     var body: some View {
-        VStack {
-            Text("\(formattedDate(date)) at \(time)")
-                .font(.title2)
-                .fontWeight(.bold)
-                .frame(maxWidth: .infinity) // Center the text horizontally
-                .padding()
-                .background(Color.white)
-                .cornerRadius(10)
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.mint, lineWidth: 0.2))
-                .foregroundColor(.black)
+        HStack {
+            VStack(alignment: .center, spacing: 5) {
+                Text("\(formattedDate(date))")
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .frame(maxWidth: .infinity) // Center the text horizontally
+                
+                Text("Available Time - \(time)")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+            }
+            .padding()
+            .background(Color(.systemGray6)) // Background color similar to LabelTextField
+            .cornerRadius(20)
+            .shadow(radius: 1)
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.mint, lineWidth: 0.8)
+            )
         }
+        .frame(maxWidth: .infinity) // Ensure the entire content is centered
         .padding()
     }
     
@@ -34,5 +44,6 @@ struct DayDateTextField: View {
 }
 
 #Preview {
-    DayDateTextField(date: Date(), time: "11.00") // Use the current date for preview
+    DayDateTextField(date: Date(), time: "11:00 AM") // Use the current date for preview
 }
+
