@@ -10,10 +10,10 @@ import SwiftUI
 struct LoginView: View {
     @State private var email: String = ""
     @State private var isKeyboardVisible = false
-    @State private var navigationPath = NavigationPath()
-    
+    @State private var navigateToVerification = false 
+
     var body: some View {
-        NavigationStack(path: $navigationPath) {
+        NavigationStack {
             VStack(spacing: 20) {
                 GeometryReader { geometry in
                     VStack {
@@ -45,6 +45,12 @@ struct LoginView: View {
                             labelTextColor: Color(.sRGB, red: 60/255, green: 60/255, blue: 67/255, opacity: 0.6)
                         )
                         
+                        // Hidden NavigationLink that activates when navigateToVerification is set to true
+                        NavigationLink(destination: VerificationCodeView(), isActive: $navigateToVerification) {
+                            EmptyView()
+                        }
+                        .hidden()
+
                         CustomButton(
                             isKeyboardVisible: $isKeyboardVisible,
                             buttonText: "Next",
@@ -52,7 +58,7 @@ struct LoginView: View {
                             buttonTextColor: .white,
                             fontSize: 16,
                             action: {
-                                navigationPath.append("VerificationCode") 
+                                validateEmailAndNavigate()
                             }
                         )
                         
@@ -69,23 +75,29 @@ struct LoginView: View {
                     .padding(.bottom, isKeyboardVisible ? geometry.safeAreaInsets.bottom : 0)
                 }
             }
-            .navigationDestination(for: String.self) { value in
-                if value == "VerificationCode" {
-                    VerificationCodeView()
-                }
+            .onTapGesture {
+                self.isKeyboardVisible = false
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             }
         }
         .padding(.top, 20)
         .frame(maxHeight: .infinity)
-        .onTapGesture {
-            self.isKeyboardVisible = false
-            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+
+    // Function to validate email and trigger navigation
+    private func validateEmailAndNavigate() {
+        if email.contains("@") && email.count > 5 {  // Simple validation
+            navigateToVerification = true  // Triggers NavigationLink
+        } else {
+            print("Invalid email address")
         }
     }
 }
 
+// Preview
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()
     }
 }
+
