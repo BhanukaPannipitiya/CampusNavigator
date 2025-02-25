@@ -44,7 +44,7 @@ struct MeetingLecturesView: View {
                 
                 VStack(spacing: 0) {
                     // Header Section
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 20) {
                         Text("Meeting Lecturers")
                             .font(.system(size: 28, weight: .bold))
                             .padding(.top, 28)
@@ -58,22 +58,28 @@ struct MeetingLecturesView: View {
                     .padding(.bottom, 20)
                     
                     // Search Bar
-                    HStack {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundColor(.gray)
+                    VStack {
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(Color(.sRGB, red: 60/255, green: 60/255, blue: 67/255, opacity: 0.5))
+                            
+                            TextField("Search by lecturers name", text: $searchText)
+                                .textFieldStyle(PlainTextFieldStyle())
+                                .foregroundColor(Color(.sRGB, red: 60/255, green: 60/255, blue: 67/255, opacity: 0.5))
+                            
+                        }
                         
-                        TextField("Search by lecturers name", text: $searchText)
-                            .padding(.vertical, 10)
-                            .disableAutocorrection(true)
-                            .font(.subheadline)
-                            .foregroundColor(Color(.sRGB, red: 60/255, green: 60/255, blue: 67/255, opacity: 0.6))
+                        .padding(.horizontal)
+                        .padding(10)
+                        .background(Color(.sRGB, red: 242/255, green: 242/255, blue: 247/255))
+                        .cornerRadius(10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color(.sRGB, red: 142/255, green: 142/255, blue: 147/255, opacity: 0.1), lineWidth: 1)
+                        )
                     }
-                    .padding(.horizontal, 15)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(10)
-                    //.shadow(color: .mint.opacity(0.2), radius: 10, x: 0, y: 4)
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 35)
+                    .padding(.horizontal)
+                    .padding(.bottom,25)
                     
                     // Lecturers List
                     ScrollView {
