@@ -1,17 +1,18 @@
 import SwiftUI
 
+
 struct HomeView: View {
     let features = [
         "AR Navigator", "Activity Map",
         "Occupancy", "Events", "Chat", "Meeting Lectures", "Emergency", "Updates"
     ]
-    
+
     let columns = [
         GridItem(.flexible(), spacing: 20),
         GridItem(.flexible(), spacing: 20)
     ]
     
-    @State private var selectedTab: TabItem = .home
+    @Binding var selectedTab: Int
     @State private var selectedFeature: String?
     
     let backgroundGradient = LinearGradient(
@@ -22,8 +23,7 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 20) {
-                
+            VStack( spacing: 20) {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
                         Image("profilepic")
@@ -49,16 +49,15 @@ struct HomeView: View {
                 }
                 .padding(.horizontal, 10)
                 
-                
                 SearchBar(text: .constant(""))
                     .padding(.horizontal, 10)
-                ScrollView{
+                
+                ScrollView {
                     EventSlideshowView()
                     
                     Text("Explore our features")
                         .font(.headline)
                         .frame(maxWidth: .infinity, alignment: .center)
-                    
                     
                     LazyVGrid(columns: columns, spacing: 20) {
                         ForEach(features, id: \.self) { feature in
@@ -91,9 +90,7 @@ struct HomeView: View {
                                                 .font(.system(size: 10, weight: .semibold))
                                                 .foregroundColor(.white)
                                         }
-                                        
                                     }
-                                    
                                 }
                                 .padding()
                                 .frame(width: 160, height: 100)
@@ -116,11 +113,8 @@ struct HomeView: View {
                     
                     Spacer()
                 }
-                
-                
-                
+                BottomTabBar(selectedTab: .constant(0))
             }
-            .padding(.horizontal)
             .background(backgroundGradient)
             .navigationDestination(item: $selectedFeature) { feature in
                 switch feature {
@@ -138,49 +132,31 @@ struct HomeView: View {
                     EmptyView()
                 }
             }
-            BottomTabBar(selectedTab: $selectedTab)
         }
     }
     
     private func gradientColors(for feature: String) -> [Color] {
         switch feature {
         case "AR Navigator":
-            return [Color(red: 0x44 / 255, green: 0xBD / 255, blue: 0xB7 / 255),
-                    Color(red: 0x5D / 255, green: 0x8A / 255, blue: 0xE5 / 255)]
-            
+            return [Color.blue, Color.purple]
         case "Activity Map":
-            return [Color(red: 0x35 / 255, green: 0x17 / 255, blue: 0xCE / 255),
-                    Color(red: 0x82 / 255, green: 0x70 / 255, blue: 0xDC / 255)]
-            
+            return [Color.green, Color.blue]
         case "Occupancy":
-            return [Color(red: 0x67 / 255, green: 0xCE / 255, blue: 0x67 / 255),
-                    Color(red: 0x41 / 255, green: 0x89 / 255, blue: 0x66 / 255)]
-            
+            return [Color.orange, Color.red]
         case "Events":
-            return [Color(red: 0xED / 255, green: 0x61 / 255, blue: 0xB1 / 255),
-                    Color(red: 0xE3 / 255, green: 0xA9 / 255, blue: 0xC9 / 255)]
-            
+            return [Color.pink, Color.purple]
         case "Chat":
-            return [Color(red: 0xF8 / 255, green: 0x8E / 255, blue: 0x55 / 255),
-                    Color(red: 0xC3 / 255, green: 0x55 / 255, blue: 0x1A / 255)]
-            
+            return [Color.yellow, Color.orange]
         case "Meeting Lectures":
-            return [Color(red: 0x82 / 255, green: 0x70 / 255, blue: 0xDC / 255),
-                    Color(red: 0x53 / 255, green: 0x41 / 255, blue: 0xAD / 255)]
-            
+            return [Color.teal, Color.blue]
         case "Emergency":
-            return [Color(red: 0xFE / 255, green: 0x06 / 255, blue: 0x06 / 255),
-                    Color(red: 0x98 / 255, green: 0x04 / 255, blue: 0x04 / 255)]
-            
+            return [Color.red, Color.black]
         case "Updates":
-            return [Color(red: 0xFF / 255, green: 0xC8 / 255, blue: 0x00 / 255),
-                    Color(red: 0xFF / 255, green: 0x94 / 255, blue: 0x00 / 255)]
-            
+            return [Color.gray, Color.blue]
         default:
             return [Color.gray.opacity(0.8), Color.gray.opacity(0.6)]
         }
     }
-    
     
     private func iconName(for feature: String) -> String {
         switch feature {
@@ -199,6 +175,6 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        HomeView(selectedTab: .constant(0))
     }
 }

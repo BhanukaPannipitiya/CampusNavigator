@@ -3,15 +3,13 @@ import MapKit
 
 struct ActivityMapView: View {
     @State private var searchText = ""
-    @State private var filterOptions: Set<String> = ["Lectures", "Exams", "Events"]
+    @State private var selectedFilter: String = "Lectures"
     @State private var region = MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
-            span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
+        center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
+        span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
     @State private var showActivityForm = false
     @State private var selectedLocation: Location?
     @State private var showDetails = false
-    
-
     @State private var locations: [Location] = [
         Location(name: "Main Lecture Hall", type: "Lectures", coordinate: .init(latitude: 37.7749, longitude: -122.4194)),
         Location(name: "Science Building", type: "Lectures", coordinate: .init(latitude: 37.7755, longitude: -122.4180)),
@@ -20,50 +18,34 @@ struct ActivityMapView: View {
         Location(name: "Sports Complex", type: "Events", coordinate: .init(latitude: 37.7725, longitude: -122.4215))
     ]
     
-
     var filteredLocations: [Location] {
-        locations.filter { filterOptions.contains($0.type) }
+        locations.filter { $0.type == selectedFilter }
     }
+//    @State private var selectedTab: TabItem = .home
     
     var body: some View {
-        ZStack {
-            VStack(spacing: 20) {
-                VStack(alignment: .leading) {
-                    Text("Know what's happening")
-                        .font(.system(size: 26, weight: .heavy, design: .default))
+        ZStack(alignment: .bottom) {
+            VStack(spacing: 16) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Live Campus Activity Map")
+                        .font(.title.bold())
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.leading, 16)
+                        .padding(.horizontal)
                     
-                    Text("Tap for events to know more")
-                        .font(.system(size: 15, weight: .regular, design: .default))
-                        .foregroundColor(Color(.sRGB, red: 60/255, green: 60/255, blue: 67/255, opacity: 0.6))
+                    Text("Tap locations to see more detials")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.leading)
+                        .padding(.horizontal)
                 }
-                .padding(.leading)
                 
-                // Filter Buttons
-                HStack {
-                    ForEach(["Lectures", "Exams", "Events"], id: \.self) { filter in
-                        Button(action: {
-                            if filterOptions.contains(filter) {
-                                filterOptions.remove(filter)
-                            } else {
-                                filterOptions.insert(filter)
-                            }
-                        }) {
-                            Text(filter)
-                                .font(.subheadline.bold())
-                                .foregroundColor(filterOptions.contains(filter) ? .white : .blue)
-                                .padding(.vertical, 8)
-                                .padding(.horizontal, 12)
-                                .background(
-                                    filterOptions.contains(filter) ? Color.blue : Color(.systemGray6)
-                                )
-                                .cornerRadius(15)
-                        }
+                Picker("Filter", selection: $selectedFilter) {
+                    ForEach(["Lectures", "Exams", "Events"], id: \ .self) { filter in
+                        Text(filter).tag(filter)
                     }
                 }
+                .pickerStyle(SegmentedPickerStyle())
+                .accentColor(.mint)
                 .padding(.horizontal)
                 
                 Map(coordinateRegion: $region, annotationItems: filteredLocations) { location in
@@ -72,32 +54,32 @@ struct ActivityMapView: View {
                             selectedLocation = location
                             showDetails = true
                         }) {
-                            VStack {
+                            VStack(spacing: 4) {
                                 Image(systemName: "mappin.circle.fill")
                                     .font(.title)
                                     .foregroundColor(.white)
                                     .padding(8)
-                                    .background(Color.blue)
+                                    .background(Color.mint)
                                     .clipShape(Circle())
                                 
                                 Text(location.name)
                                     .font(.caption)
-                                    .fixedSize()
+                                    .foregroundColor(.white)
+                                    .padding(6)
+                                    .background(Color.black.opacity(0.7))
+                                    .cornerRadius(8)
                             }
                         }
                     }
                 }
                 .frame(height: 400)
                 .cornerRadius(20)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                )
                 .padding(.horizontal)
-            }
-//           .frame(maxHeight: .infinity)
-            VStack {
+                
                 Spacer()
+            }
+            
+            VStack {
                 HStack {
                     Spacer()
                     Button(action: {
@@ -107,23 +89,23 @@ struct ActivityMapView: View {
                             .font(.title.bold())
                             .foregroundColor(.white)
                             .padding()
-                            .background(Color.blue)
+                            .background(Color.mint)
                             .clipShape(Circle())
                             .shadow(radius: 5)
                     }
                     .padding(.trailing, 20)
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 80)
                 }
             }
             
-            // Activity Details Panel
             if let selectedLocation = selectedLocation, showDetails {
                 ActivityDetailsPanel(location: selectedLocation, showDetails: $showDetails)
                     .transition(.move(edge: .bottom))
             }
             
-            
+//            BottomTabBar(selectedTab: $selectedTab)
         }
+        .ignoresSafeArea(edges: .bottom)
         .sheet(isPresented: $showActivityForm) {
             AddActivityForm(locations: $locations)
         }
@@ -226,3 +208,4 @@ struct ActivityMapView_Previews: PreviewProvider {
         ActivityMapView()
     }
 }
+
