@@ -19,6 +19,7 @@ struct MeetingLecturesView: View {
     @State private var isAddEventPresented = false
     @State private var searchText: String = ""
     
+    
     let lecturers: [Lecturer] = [
         Lecturer(title: "Dr. John Jhones", description: "Schedule a meeting about course selection"),
         Lecturer(title: "Dr. Sarah Smith", description: "Discuss research project opportunities"),
