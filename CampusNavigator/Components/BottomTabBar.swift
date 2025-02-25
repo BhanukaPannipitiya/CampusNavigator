@@ -1,24 +1,22 @@
-//
-//  BottomTabBar.swift
-//  CampusNavigator
-//
-//  Created by Bhanuka  Pannipitiya  on 2025-02-16.
-//
-
 import SwiftUI
 
 struct BottomTabBar: View {
     @Binding var selectedTab: Int
-        
-        var body: some View {
+    
+    init(selectedTab: Binding<Int>) {
+        self._selectedTab = selectedTab
+        Self.configureTabBarAppearance() // Use `Self.` to call the static method
+    }
+    
+    var body: some View {
             TabView(selection: $selectedTab) {
+                
                 HomeView(selectedTab: $selectedTab)
                     .tabItem {
                         Image(systemName: "house.fill")
                         Text("Home")
                     }
                     .tag(0)
-                
                 ActivityMapView()
                     .tabItem {
                         Image(systemName: "map.fill")
@@ -32,13 +30,19 @@ struct BottomTabBar: View {
                         Text("Emergency")
                     }
                     .tag(2)
+                
             }
             .accentColor(.mint)
-            .background(Color.white)
-            .edgesIgnoringSafeArea(.bottom)
-        }
+    }
+    
+    private static func configureTabBarAppearance() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = UIColor.systemGray3
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
 }
-
 
 #Preview {
     BottomTabBar(selectedTab: .constant(0))

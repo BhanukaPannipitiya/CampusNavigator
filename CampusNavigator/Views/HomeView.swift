@@ -23,97 +23,101 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack {
-            VStack( spacing: 20) {
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack {
-                        Image("profilepic")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 60, height: 60)
-                            .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.mint, lineWidth: 1))
-                        
-                        VStack(alignment: .leading) {
-                            Text("Hello,")
-                                .font(.subheadline.weight(.medium))
+            VStack {
+                VStack() {
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack {
+                            Image("profilepic")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 60, height: 60)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.mint, lineWidth: 1))
                             
-                            Text("Chiara Tews")
-                                .font(.title2.weight(.semibold))
+                            VStack(alignment: .leading) {
+                                Text("Hello,")
+                                    .font(.subheadline.weight(.medium))
+                                
+                                Text("Chiara Tews")
+                                    .font(.title2.weight(.semibold))
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading)
+                            
+                            Image(systemName: "bell.badge")
+                                .font(.title2)
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.leading)
-                        
-                        Image(systemName: "bell.badge")
-                            .font(.title2)
                     }
-                }
-                .padding(.horizontal, 10)
-                
-                SearchBar(text: .constant(""))
                     .padding(.horizontal, 10)
-                
-                ScrollView {
-                    EventSlideshowView()
                     
-                    Text("Explore our features")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity, alignment: .center)
+                    SearchBar(text: .constant(""))
+                        .padding(.horizontal, 10)
                     
-                    LazyVGrid(columns: columns, spacing: 20) {
-                        ForEach(features, id: \.self) { feature in
-                            Button(action: { selectedFeature = feature }) {
-                                VStack(spacing: 8) {
-                                    HStack {
-                                        VStack {
-                                            Image(systemName: iconName(for: feature))
-                                                .font(.title2)
-                                                .frame(width: 60)
-                                                .foregroundColor(.white)
+                    ScrollView {
+                        EventSlideshowView()
+                        
+                        Text("Explore our features")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        
+                        LazyVGrid(columns: columns, spacing: 20) {
+                            ForEach(features, id: \.self) { feature in
+                                Button(action: { selectedFeature = feature }) {
+                                    VStack(spacing: 8) {
+                                        HStack {
+                                            VStack {
+                                                Image(systemName: iconName(for: feature))
+                                                    .font(.title2)
+                                                    .frame(width: 60)
+                                                    .foregroundColor(.white)
+                                                
+                                                Text(feature)
+                                                    .font(.system(size: 13, weight: .bold))
+                                                    .foregroundColor(Color(.white))
+                                                    .frame(width: 70, height: 40)
+                                                    .multilineTextAlignment(.center)
+                                                    .lineLimit(2)
+                                                    .minimumScaleFactor(0.8)
+                                                
+                                            }
+                                            Spacer()
                                             
-                                            Text(feature)
-                                                .font(.system(size: 13, weight: .bold))
-                                                .foregroundColor(Color(.white))
-                                                .frame(width: 70, height: 40)
-                                                .multilineTextAlignment(.center)
-                                                .lineLimit(2)
-                                                .minimumScaleFactor(0.8)
-                                            
-                                        }
-                                        Spacer()
-                                        
-                                        ZStack {
-                                            Circle()
-                                                .stroke(Color.white, lineWidth: 1)
-                                                .frame(width: 20, height: 20)
-                                            
-                                            Image(systemName: "chevron.right")
-                                                .font(.system(size: 10, weight: .semibold))
-                                                .foregroundColor(.white)
+                                            ZStack {
+                                                Circle()
+                                                    .stroke(Color.white, lineWidth: 1)
+                                                    .frame(width: 20, height: 20)
+                                                
+                                                Image(systemName: "chevron.right")
+                                                    .font(.system(size: 10, weight: .semibold))
+                                                    .foregroundColor(.white)
+                                            }
                                         }
                                     }
-                                }
-                                .padding()
-                                .frame(width: 160, height: 100)
-                                .background(
-                                    LinearGradient(
-                                        gradient: Gradient(colors: gradientColors(for: feature)),
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
+                                    .padding()
+                                    .frame(width: 160, height: 100)
+                                    .background(
+                                        LinearGradient(
+                                            gradient: Gradient(colors: gradientColors(for: feature)),
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
                                     )
-                                )
-                                .cornerRadius(16)
-                                .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: 2)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color.gray.opacity(0.2), lineWidth: 1)
-                                )
+                                    .cornerRadius(16)
+                                    .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: 2)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                                    )
+                                }
                             }
                         }
                     }
-                    
-                    Spacer()
+                    .padding(.bottom, 50)
                 }
-                BottomTabBar(selectedTab: .constant(0))
+                
+                Spacer()
+                
+//                BottomTabBar(selectedTab: $selectedTab)
             }
             .background(backgroundGradient)
             .navigationDestination(item: $selectedFeature) { feature in
@@ -134,6 +138,7 @@ struct HomeView: View {
             }
         }
     }
+
     
     private func gradientColors(for feature: String) -> [Color] {
         switch feature {

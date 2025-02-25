@@ -68,7 +68,7 @@ struct VerificationCodeView: View {
                         .padding(.top, 10)
 
                         // NavigationLink (Hidden) to navigate on button press
-                        NavigationLink(destination: HomeView(selectedTab: .constant(0)), isActive: $navigateToHome) {
+                        NavigationLink(destination: BottomTabBar(selectedTab: .constant(0)), isActive: $navigateToHome) {
                             EmptyView()
                         }
                         .hidden()
@@ -108,9 +108,9 @@ struct VerificationCodeView: View {
     // Function to verify OTP and navigate
     private func verifyCodeAndNavigate() {
         let enteredCode = otpValues.joined()
-        if enteredCode.count == 4 { // Simulating OTP verification (replace with API call if needed)
+        if enteredCode.count == 4 {
             print("OTP Verified: \(enteredCode)")
-            navigateToHome = true  // Triggers NavigationLink
+            navigateToHome = true
         } else {
             print("Invalid OTP")
         }
