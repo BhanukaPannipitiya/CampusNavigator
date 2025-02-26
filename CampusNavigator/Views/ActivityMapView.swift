@@ -115,6 +115,7 @@ struct ActivityMapView: View {
                 NavigationSheet(destination: location.name)
             }
         }
+        .padding(.vertical)
     }
     
     private func showNavigationSteps() {

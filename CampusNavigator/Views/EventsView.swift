@@ -101,7 +101,7 @@ struct AddEventView: View {
     @State private var endTime = ""
     @State private var studentEmail = ""
     @State private var isKeyboardVisible = false
-
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -119,7 +119,7 @@ struct AddEventView: View {
                             labelTextColor: .gray
                             
                         )
-                      
+                        
                         CustomTextField(
                             text: $description,
                             isKeyboardVisible: $isKeyboardVisible,
@@ -130,7 +130,7 @@ struct AddEventView: View {
                             labelText: "Description",
                             labelTextColor: .gray
                         )
-
+                        
                         CustomTextField(
                             text: $startTime,
                             isKeyboardVisible: $isKeyboardVisible,
@@ -142,7 +142,7 @@ struct AddEventView: View {
                             labelTextColor: .gray
                             
                         )
-                      
+                        
                         CustomTextField(
                             
                             text: $endTime,
@@ -203,12 +203,14 @@ struct EventDetailView: View {
     let event: Event
     @Environment(\.dismiss) var dismiss
     @State private var isAnimating = false
+    @State private var showAlert = false
+    @State private var alertMessage = ""
     
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [Color.mint.opacity(0.2), Color.white]),
                            startPoint: .topLeading, endPoint: .bottomTrailing)
-                .ignoresSafeArea()
+            .ignoresSafeArea()
             
             ScrollView {
                 VStack(spacing: 20) {
@@ -222,9 +224,9 @@ struct EventDetailView: View {
                                 .clipped()
                                 .overlay(
                                     LinearGradient(gradient: Gradient(colors: [.clear, .black.opacity(0.6)]),
-                                    startPoint: .top,
-                                    endPoint: .bottom
-                                ))
+                                                   startPoint: .top,
+                                                   endPoint: .bottom
+                                                  ))
                         }
                         
                         VStack(alignment: .leading, spacing: 8) {
@@ -269,6 +271,9 @@ struct EventDetailView: View {
                             .foregroundColor(.white)
                             .cornerRadius(12)
                             .shadow(radius: 5)
+                            .alert(isPresented: $showAlert) {
+                                Alert(title: Text("Success"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                            }
                         }
                     }
                     .padding(.horizontal)
@@ -324,46 +329,45 @@ struct EventDetailView: View {
         }
     }
     
+    
     func addToCalendar() {
         let eventStore = EKEventStore()
         
         if #available(iOS 17.0, *) {
-            // Use the new method for iOS 17 and later
-            eventStore.requestFullAccessToEvents { (granted, error) in
-                if granted && error == nil {
-                    let newEvent = EKEvent(eventStore: eventStore)
-                    newEvent.title = event.title
-                    newEvent.startDate = Date()
-                    newEvent.endDate = Calendar.current.date(byAdding: .hour, value: 2, to: Date())
-                    newEvent.calendar = eventStore.defaultCalendarForNewEvents
-                    
-                    do {
-                        try eventStore.save(newEvent, span: .thisEvent)
-                    } catch {
-                        print("Error saving event: \(error.localizedDescription)")
-                    }
-                } else {
-                    print("Access to calendar denied or error: \(String(describing: error))")
+            eventStore.requestFullAccessToEvents { granted, error in
+                handleCalendarAccess(granted: granted, error: error, eventStore: eventStore)
+            }
+        } else {
+            eventStore.requestAccess(to: .event) { granted, error in
+                handleCalendarAccess(granted: granted, error: error, eventStore: eventStore)
+            }
+        }
+    }
+    
+    func handleCalendarAccess(granted: Bool, error: Error?, eventStore: EKEventStore) {
+        if granted, error == nil {
+            let newEvent = EKEvent(eventStore: eventStore)
+            newEvent.title = event.title
+            newEvent.startDate = Date()
+            newEvent.endDate = Calendar.current.date(byAdding: .hour, value: 2, to: Date())
+            newEvent.calendar = eventStore.defaultCalendarForNewEvents
+            
+            do {
+                try eventStore.save(newEvent, span: .thisEvent)
+                DispatchQueue.main.async {
+                    alertMessage = "Event added successfully to your calendar!"
+                    showAlert = true
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    alertMessage = "Failed to save event: \(error.localizedDescription)"
+                    showAlert = true
                 }
             }
         } else {
-            // Fallback for earlier iOS versions
-            eventStore.requestAccess(to: .event) { (granted, error) in
-                if granted && error == nil {
-                    let newEvent = EKEvent(eventStore: eventStore)
-                    newEvent.title = event.title
-                    newEvent.startDate = Date()
-                    newEvent.endDate = Calendar.current.date(byAdding: .hour, value: 2, to: Date())
-                    newEvent.calendar = eventStore.defaultCalendarForNewEvents
-                    
-                    do {
-                        try eventStore.save(newEvent, span: .thisEvent)
-                    } catch {
-                        print("Error saving event: \(error.localizedDescription)")
-                    }
-                } else {
-                    print("Access to calendar denied or error: \(String(describing: error))")
-                }
+            DispatchQueue.main.async {
+                alertMessage = "Access to calendar denied or error: \(error?.localizedDescription ?? "Unknown error")"
+                showAlert = true
             }
         }
     }
