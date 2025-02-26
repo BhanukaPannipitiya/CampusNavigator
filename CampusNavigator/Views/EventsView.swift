@@ -1,7 +1,7 @@
 import SwiftUI
 import EventKit
 
-struct Event: Identifiable {
+struct Event: Identifiable, Equatable {
     let id = UUID()
     let title: String
     let description: String
@@ -11,10 +11,14 @@ struct Event: Identifiable {
     let venue: String
     let time: String
     let imageName: String?
+    
+    // Equatable conformance
+    static func == (lhs: Event, rhs: Event) -> Bool {
+        return lhs.id == rhs.id
+    }
 }
 
 struct EventsView: View {
-    @State private var isKeyboardVisible = false
     @State private var selectedEvent: Event? = nil
     @State private var isEventDetailPresented = false
     @State private var isAddEventPresented = false
@@ -42,7 +46,6 @@ struct EventsView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.leading)
                     }
-                    .padding(.leading)
                     
                     ScrollView {
                         VStack(spacing: 10) {
@@ -50,21 +53,14 @@ struct EventsView: View {
                                 EventComponent(title: event.title, description: event.description, day: event.day, weekday: event.weekday, month: event.month)
                                     .onTapGesture {
                                         selectedEvent = event
-                                        isEventDetailPresented = true
                                     }
                             }
                         }
                         .padding(.horizontal, 16)
                     }
                 }
-                .padding(.bottom, isKeyboardVisible ? geometry.safeAreaInsets.bottom : 0)
             }
             .padding(.top, 50)
-            .frame(maxHeight: .infinity)
-            .onTapGesture {
-                self.isKeyboardVisible = false
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-            }
             
             // Add Event Button at the Bottom Right Corner
             Button(action: {
@@ -78,9 +74,17 @@ struct EventsView: View {
             .frame(maxWidth: .infinity, alignment: .bottomTrailing)
             .padding(.bottom, 30)
         }
+        .onChange(of: selectedEvent) { newValue in
+            if newValue != nil {
+                isEventDetailPresented = true
+            }
+        }
         .sheet(isPresented: $isEventDetailPresented) {
             if let selectedEvent = selectedEvent {
                 EventDetailView(event: selectedEvent)
+                    .onDisappear {
+                        self.selectedEvent = nil
+                    }
             }
         }
         .sheet(isPresented: $isAddEventPresented) {
@@ -88,137 +92,280 @@ struct EventsView: View {
         }
     }
 }
+struct AddEventView: View {
+    @Environment(\.dismiss) var dismiss
+    @State private var eventName = ""
+    @State private var subject = ""
+    @State private var description = ""
+    @State private var startTime = ""
+    @State private var endTime = ""
+    @State private var studentEmail = ""
+    @State private var isKeyboardVisible = false
 
-struct EventDetailView: View {
-    let event: Event
-    let eventStore = EKEventStore()
-    @Environment(\.presentationMode) var presentationMode
-    
-    func addToCalendar() {
-        eventStore.requestAccess(to: .event) { (granted, error) in
-            if granted && error == nil {
-                let newEvent = EKEvent(eventStore: eventStore)
-                newEvent.title = event.title
-                newEvent.startDate = Date() // Placeholder: Adjust as needed
-                newEvent.endDate = Calendar.current.date(byAdding: .hour, value: 2, to: Date())
-                newEvent.calendar = eventStore.defaultCalendarForNewEvents
-                
-                do {
-                    try eventStore.save(newEvent, span: .thisEvent)
-                } catch {
-                    print("Error saving event: \(error.localizedDescription)")
-                }
-            }
-        }
-    }
-    
     var body: some View {
-        VStack(spacing: 20) {
-            HStack {
-                Button(action: { presentationMode.wrappedValue.dismiss() }) {
-                    Text("Cancel")
+        NavigationView {
+            VStack {
+                Form {
+                    Section(header: Text("Event Details")) {
+                        CustomTextField(
+                            
+                            text: $eventName,
+                            isKeyboardVisible: $isKeyboardVisible,
+                            placeholder: "Enter event name",
+                            textColor: .black,
+                            backgroundColor: Color(.systemGray6),
+                            fontSize: 16,
+                            labelText: "Event Name",
+                            labelTextColor: .gray
+                            
+                        )
+                      
+                        CustomTextField(
+                            text: $description,
+                            isKeyboardVisible: $isKeyboardVisible,
+                            placeholder: "Enter description",
+                            textColor: .black,
+                            backgroundColor: Color(.systemGray6),
+                            fontSize: 16,
+                            labelText: "Description",
+                            labelTextColor: .gray
+                        )
+
+                        CustomTextField(
+                            text: $startTime,
+                            isKeyboardVisible: $isKeyboardVisible,
+                            placeholder: "Enter start time (e.g., 2:00 PM)",
+                            textColor: .black,
+                            backgroundColor: Color(.systemGray6),
+                            fontSize: 16,
+                            labelText: "Start Time",
+                            labelTextColor: .gray
+                            
+                        )
+                      
+                        CustomTextField(
+                            
+                            text: $endTime,
+                            isKeyboardVisible: $isKeyboardVisible,
+                            placeholder: "Enter end time (e.g., 4:00 PM)",
+                            textColor: .black,
+                            backgroundColor: Color(.systemGray6),
+                            fontSize: 16,
+                            labelText: "End Time",
+                            labelTextColor: .gray
+                        )
+                    }
+                    
+                    Section {
+                        Text("Adding an Event will require further confirmation and please be accurate about information")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
+                    
+                    Section(header: Text("Verification")) {
+                        CustomTextField(
+                            text: $studentEmail,
+                            isKeyboardVisible: $isKeyboardVisible,
+                            placeholder: "Enter student email",
+                            textColor: .black,
+                            backgroundColor: Color(.systemGray6),
+                            fontSize: 16,
+                            labelText: "Verification Email",
+                            labelTextColor: .gray
+                        )
+                        
+                        Text("Email will be sent to the above email address asking for confirmation of the event details and once the confirmation is done you can see the activity on map")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
+                }
+                
+                Button(action: {
+                    // Add event logic here
+                    dismiss()
+                }) {
+                    Text("Done")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.mint)
+                        .cornerRadius(10)
+                        .shadow(radius: 3)
                 }
                 .padding()
-                Spacer()
             }
-            
-            if let eventImage = event.imageName {
-                Image(eventImage)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 200)
-                    .cornerRadius(10)
-                    .padding()
-            }
-            
-            Text(event.title)
-                .font(.largeTitle)
-                .bold()
-                .padding()
-            
-            Text(event.description)
-                .font(.body)
-                .padding()
-            
-            Text("📅 Date: \(event.day) \(event.month) 2025")
-                .font(.headline)
-            
-            Text("📍 Venue: \(event.venue)")
-                .font(.headline)
-            
-            Text("⏰ Time: \(event.time)")
-                .font(.headline)
-            
-            Spacer()
-            
-            Button(action: addToCalendar) {
-                HStack {
-                    Text("Add to my calendar")
-                    Image(systemName: "plus.circle.fill")
-                }
-                .foregroundColor(.blue)
-                .padding()
-            }
+            .navigationTitle("Add Event")
         }
-        .padding(.top, 50)
     }
 }
-
-struct AddEventView: View {
-    @Environment(\.presentationMode) var presentationMode
-    
-    @State private var eventTitle: String = ""
-    @State private var eventDescription: String = ""
-    @State private var eventDate: String = ""
-    @State private var eventTime: String = ""
+struct EventDetailView: View {
+    let event: Event
+    @Environment(\.dismiss) var dismiss
+    @State private var isAnimating = false
     
     var body: some View {
-        VStack(spacing: 20) {
-            HStack {
-                Button(action: { presentationMode.wrappedValue.dismiss() }) {
-                    Text("Cancel")
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [Color.mint.opacity(0.2), Color.white]),
+                           startPoint: .topLeading, endPoint: .bottomTrailing)
+                .ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Header with Image
+                    ZStack(alignment: .bottomLeading) {
+                        if let imageName = event.imageName {
+                            Image(imageName)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 250)
+                                .clipped()
+                                .overlay(
+                                    LinearGradient(gradient: Gradient(colors: [.clear, .black.opacity(0.6)]),
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                ))
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(event.title)
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                            
+                            Text(event.venue)
+                                .font(.title3)
+                                .foregroundColor(.white.opacity(0.9))
+                        }
+                        .padding()
+                    }
+                    .cornerRadius(20)
+                    .shadow(radius: 10)
+                    .padding(.horizontal)
+                    
+                    VStack(alignment: .leading, spacing: 20) {
+                        // Date and Time
+                        HStack(spacing: 20) {
+                            DetailCard(icon: "calendar", title: "Date", value: "\(event.day) \(event.month)")
+                            DetailCard(icon: "clock", title: "Time", value: event.time)
+                        }
+                        
+                        // Description
+                        Text(event.description)
+                            .font(.body)
+                            .lineSpacing(6)
+                            .cornerRadius(12)
+                            .frame(maxWidth: .infinity)
+                        
+                        // Add to Calendar Button
+                        Button(action: addToCalendar) {
+                            HStack {
+                                Image(systemName: "calendar.badge.plus")
+                                Text("Add to Calendar")
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.mint)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                            .shadow(radius: 5)
+                        }
+                    }
+                    .padding(.horizontal)
                 }
-                .padding()
+                .padding(.bottom, 30)
+            }
+            .padding(.vertical,90)
+            
+            // Close Button
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: { dismiss() }) {
+                        Text("Close")
+                    }
+                    .padding()
+                }
                 Spacer()
             }
-            
-            Text("Add New Event")
-                .font(.largeTitle)
-                .bold()
-                .padding()
-            
-            TextField("Event Title", text: $eventTitle)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            TextField("Event Description", text: $eventDescription)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            TextField("Event Date", text: $eventDate)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            TextField("Event Time", text: $eventTime)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            Spacer()
-            
-            Button(action: {
-                // Handle adding event logic here
-                print("Event Added: \(eventTitle), \(eventDescription), \(eventDate), \(eventTime)")
-                presentationMode.wrappedValue.dismiss()
-            }) {
-                HStack {
-                    Text("Add Event")
-                    Image(systemName: "plus.circle.fill")
-                }
-                .foregroundColor(.blue)
-                .padding()
+        }
+        .onAppear {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                isAnimating = true
             }
         }
-        .padding(.top, 50)
+    }
+    
+    // Reusable Detail Card Component
+    struct DetailCard: View {
+        let icon: String
+        let title: String
+        let value: String
+        
+        var body: some View {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Image(systemName: icon)
+                        .foregroundColor(.mint)
+                    Text(title)
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                }
+                
+                Text(value)
+                    .font(.title3)
+                    .fontWeight(.medium)
+            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(.systemBackground))
+            .cornerRadius(12)
+            .shadow(radius: 3)
+        }
+    }
+    
+    func addToCalendar() {
+        let eventStore = EKEventStore()
+        
+        if #available(iOS 17.0, *) {
+            // Use the new method for iOS 17 and later
+            eventStore.requestFullAccessToEvents { (granted, error) in
+                if granted && error == nil {
+                    let newEvent = EKEvent(eventStore: eventStore)
+                    newEvent.title = event.title
+                    newEvent.startDate = Date()
+                    newEvent.endDate = Calendar.current.date(byAdding: .hour, value: 2, to: Date())
+                    newEvent.calendar = eventStore.defaultCalendarForNewEvents
+                    
+                    do {
+                        try eventStore.save(newEvent, span: .thisEvent)
+                    } catch {
+                        print("Error saving event: \(error.localizedDescription)")
+                    }
+                } else {
+                    print("Access to calendar denied or error: \(String(describing: error))")
+                }
+            }
+        } else {
+            // Fallback for earlier iOS versions
+            eventStore.requestAccess(to: .event) { (granted, error) in
+                if granted && error == nil {
+                    let newEvent = EKEvent(eventStore: eventStore)
+                    newEvent.title = event.title
+                    newEvent.startDate = Date()
+                    newEvent.endDate = Calendar.current.date(byAdding: .hour, value: 2, to: Date())
+                    newEvent.calendar = eventStore.defaultCalendarForNewEvents
+                    
+                    do {
+                        try eventStore.save(newEvent, span: .thisEvent)
+                    } catch {
+                        print("Error saving event: \(error.localizedDescription)")
+                    }
+                } else {
+                    print("Access to calendar denied or error: \(String(describing: error))")
+                }
+            }
+        }
     }
 }
 
