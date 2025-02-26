@@ -132,6 +132,10 @@ struct HomeView: View {
                     MeetingLecturesView()
                 case "Chat":
                     ChatView()
+                case "Occupancy":
+                    ResourceAvailabilityView()
+                case "Emergency":
+                    EmergencyView()
                 default:
                     EmptyView()
                 }
