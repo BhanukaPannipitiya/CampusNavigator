@@ -54,7 +54,7 @@ struct LoginView: View {
                         CustomButton(
                             isKeyboardVisible: $isKeyboardVisible,
                             buttonText: "Next",
-                            buttonBackgroundColor: Color.blue,
+                            buttonBackgroundColor: Color.mint,
                             buttonTextColor: .white,
                             fontSize: 16,
                             action: {
