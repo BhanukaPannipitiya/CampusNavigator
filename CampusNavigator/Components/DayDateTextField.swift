@@ -5,11 +5,19 @@
 //  Created by Nisila Chandunu on 2025-02-25.
 //
 
+//
+//  DayDateTextField.swift
+//  CampusNavigator
+//
+//  Created by Nisila Chandunu on 2025-02-25.
+//
+
 import SwiftUI
 
 struct DayDateTextField: View {
     let date: Date
     let time: String
+    let isSelected: Bool // Track selection state
     
     var body: some View {
         HStack {
@@ -29,7 +37,7 @@ struct DayDateTextField: View {
             .shadow(radius: 1)
             .overlay(
                 RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color.mint, lineWidth: 0.8)
+                    .stroke(isSelected ? Color.red : Color.mint, lineWidth: 0.8) // Border color change on selection
             )
         }
         .frame(maxWidth: .infinity) // Ensure the entire content is centered
@@ -44,6 +52,6 @@ struct DayDateTextField: View {
 }
 
 #Preview {
-    DayDateTextField(date: Date(), time: "11:00 AM") // Use the current date for preview
+    DayDateTextField(date: Date(), time: "11:00 AM", isSelected: false) // Use the current date for preview
 }
 
