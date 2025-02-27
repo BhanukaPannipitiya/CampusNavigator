@@ -35,7 +35,7 @@ struct AvatarView: View {
                 .aspectRatio(contentMode: .fit)
                 .padding(isGroup ? 4 : 0)
                 .frame(width: 40, height: 40)
-                .foregroundColor(isGroup ? .blue : .gray)
+                .foregroundColor(isGroup ? .mint : .gray)
                 .background(isGroup ? Color.blue.opacity(0.2) : Color.clear)
                 .clipShape(Circle())
         }
@@ -105,7 +105,7 @@ struct ChatView: View {
                         Text("Home")
                             .fontWeight(.medium)
                     }
-                    .foregroundColor(.blue)
+                    .foregroundColor(.mint)
                 }
                 
                 Spacer()
@@ -121,7 +121,7 @@ struct ChatView: View {
                 }) {
                     Image(systemName: "square.and.pencil")
                         .font(.system(size: 20))
-                        .foregroundColor(.blue)
+                        .foregroundColor(.mint)
                 }
             }
             .padding()

@@ -23,7 +23,7 @@ struct MessageBubble: View {
                     .padding(.vertical, 8)
                     .background(
                         message.isFromCurrentUser ?
-                        Color.blue :
+                        Color.mint :
                         Color(UIColor.systemGray5)
                     )
                     .foregroundColor(
@@ -101,7 +101,7 @@ struct ChatDetailView: View {
                 }) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.blue)
+                        .foregroundColor(.mint)
                 }
                 
                 Spacer()
