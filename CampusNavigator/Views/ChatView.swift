@@ -36,7 +36,7 @@ struct AvatarView: View {
                 .padding(isGroup ? 4 : 0)
                 .frame(width: 40, height: 40)
                 .foregroundColor(isGroup ? .mint : .gray)
-                .background(isGroup ? Color.blue.opacity(0.2) : Color.clear)
+                .background(isGroup ? Color.gray.opacity(0.2) : Color.clear)
                 .clipShape(Circle())
         }
     }
