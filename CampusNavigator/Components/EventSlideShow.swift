@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EventSlideshowView: View {
-    let eventBanners = ["banner1", "banner2", "banner3"]
+    let eventBanners = ["banner1", "banner2", "banner3","banner2"]
     @State private var currentIndex = 0
     
     var body: some View {
@@ -34,7 +34,7 @@ struct EventSlideshowView: View {
     }
     
     private func startAutoSlide() {
-        Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in
+        Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
             withAnimation {
                 currentIndex = (currentIndex + 1) % eventBanners.count
             }

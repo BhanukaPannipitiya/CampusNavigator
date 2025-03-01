@@ -9,7 +9,7 @@ struct ARNavigatorView: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // Simulated status bar
+              
                 HStack {
                     Spacer()
                     Text("9:41")
@@ -20,13 +20,13 @@ struct ARNavigatorView: View {
                 
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
-                        // Header
+                        
                         Text("Where are you headed?")
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .padding(.horizontal)
                         
-                        // Search Bar
+                   
                         HStack {
                             Image(systemName: "magnifyingglass")
                                 .foregroundColor(.gray)
@@ -37,7 +37,7 @@ struct ARNavigatorView: View {
                         .cornerRadius(10)
                         .padding(.horizontal)
                         
-                        // Location Buttons
+             
                         VStack(spacing: 0) {
                             ForEach(locations, id: \.self) { location in
                                 Button(action: {}) {
@@ -63,7 +63,7 @@ struct ARNavigatorView: View {
                         .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 1)
                         .padding(.horizontal)
                         
-                        // AR Preview Section
+                     
                         VStack(alignment: .leading, spacing: 8) {
                             Text("AR preview")
                                 .font(.headline)
@@ -90,7 +90,7 @@ struct ARNavigatorView: View {
                     .padding(.vertical)
                 }
                 
-                // Start AR Button
+    
                 Button(action: {}) {
                     Text("Start AR Navigation")
                         .font(.headline)

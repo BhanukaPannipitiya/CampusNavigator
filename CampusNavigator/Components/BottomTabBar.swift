@@ -1,24 +1,22 @@
-//
-//  BottomTabBar.swift
-//  CampusNavigator
-//
-//  Created by Bhanuka  Pannipitiya  on 2025-02-16.
-//
-
 import SwiftUI
 
 struct BottomTabBar: View {
     @Binding var selectedTab: Int
-        
-        var body: some View {
+    
+    init(selectedTab: Binding<Int>) {
+        self._selectedTab = selectedTab
+        Self.configureTabBarAppearance()
+    }
+    
+    var body: some View {
             TabView(selection: $selectedTab) {
+                
                 HomeView(selectedTab: $selectedTab)
                     .tabItem {
                         Image(systemName: "house.fill")
                         Text("Home")
                     }
                     .tag(0)
-                
                 ActivityMapView()
                     .tabItem {
                         Image(systemName: "map.fill")
@@ -32,13 +30,39 @@ struct BottomTabBar: View {
                         Text("Emergency")
                     }
                     .tag(2)
+                
             }
             .accentColor(.mint)
-            .background(Color.white)
-            .edgesIgnoringSafeArea(.bottom)
-        }
+    }
+    
+    private static func configureTabBarAppearance() {
+        let appearance = UITabBarAppearance()
+        
+        appearance.configureWithDefaultBackground()
+        
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+        let blurVisualEffect = UIVisualEffectView(effect: blurEffect)
+        
+        appearance.backgroundColor = UIColor.clear
+        
+        appearance.backgroundEffect = blurEffect
+        
+        appearance.shadowColor = UIColor.black.withAlphaComponent(0.15)
+        
+        let itemAppearance = UITabBarItemAppearance()
+        
+        itemAppearance.normal.iconColor = UIColor(.mint.opacity(0.6))
+        itemAppearance.selected.iconColor = UIColor(.mint)
+        
+        itemAppearance.normal.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 4)
+        itemAppearance.selected.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 4)
+        
+        appearance.stackedLayoutAppearance = itemAppearance
+        
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
 }
-
 
 #Preview {
     BottomTabBar(selectedTab: .constant(0))

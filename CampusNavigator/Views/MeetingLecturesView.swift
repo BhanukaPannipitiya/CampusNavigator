@@ -43,7 +43,7 @@ struct MeetingLecturesView: View {
                 Color(.white)
                 
                 VStack(spacing: 0) {
-                    // Header Section
+          
                     VStack(alignment: .leading, spacing: 20) {
                         Text("Meeting Lecturers")
                             .font(.system(size: 28, weight: .bold))
@@ -57,7 +57,7 @@ struct MeetingLecturesView: View {
                     .padding(.horizontal, 20)
                     .padding(.bottom, 20)
                     
-                    // Search Bar
+           
                     VStack {
                         HStack {
                             Image(systemName: "magnifyingglass")
@@ -81,7 +81,7 @@ struct MeetingLecturesView: View {
                     .padding(.horizontal)
                     .padding(.bottom,25)
                     
-                    // Lecturers List
+          
                     ScrollView {
                         VStack(spacing: 30) {
                             ForEach(filteredLecturers) { lecturer in

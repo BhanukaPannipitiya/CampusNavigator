@@ -9,9 +9,18 @@ import SwiftUI
 
 @main
 struct CampusNavigatorApp: App {
+    @State private var isLoggedIn = false
+    @State private var isVerified = false
+    
     var body: some Scene {
         WindowGroup {
-            SplashScreenView()
+            if !isLoggedIn {
+                LoginView(isLoggedIn: $isLoggedIn)
+            } else if !isVerified {
+                VerificationCodeView(isVerified: $isVerified)
+            } else {
+                BottomTabBar(selectedTab: .constant(0))
+            }
         }
     }
 }
