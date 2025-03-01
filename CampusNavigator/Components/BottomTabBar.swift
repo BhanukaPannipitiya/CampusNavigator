@@ -5,7 +5,7 @@ struct BottomTabBar: View {
     
     init(selectedTab: Binding<Int>) {
         self._selectedTab = selectedTab
-        Self.configureTabBarAppearance() // Use `Self.` to call the static method
+        Self.configureTabBarAppearance()
     }
     
     var body: some View {
@@ -37,8 +37,28 @@ struct BottomTabBar: View {
     
     private static func configureTabBarAppearance() {
         let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor.systemGray3
+        
+        appearance.configureWithDefaultBackground()
+        
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+        let blurVisualEffect = UIVisualEffectView(effect: blurEffect)
+        
+        appearance.backgroundColor = UIColor.clear
+        
+        appearance.backgroundEffect = blurEffect
+        
+        appearance.shadowColor = UIColor.black.withAlphaComponent(0.15)
+        
+        let itemAppearance = UITabBarItemAppearance()
+        
+        itemAppearance.normal.iconColor = UIColor(.mint.opacity(0.6))
+        itemAppearance.selected.iconColor = UIColor(.mint)
+        
+        itemAppearance.normal.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 4)
+        itemAppearance.selected.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 4)
+        
+        appearance.stackedLayoutAppearance = itemAppearance
+        
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }

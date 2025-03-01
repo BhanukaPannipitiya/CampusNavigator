@@ -124,7 +124,7 @@ struct ActivityMapView: View {
     
 }
 
-// Add Activity Form
+
 struct AddActivityForm: View {
     @Binding var locations: [Location]
     @State private var name = ""
@@ -223,11 +223,11 @@ struct AddActivityForm: View {
                         CustomTextField(
                             text: $description,
                             isKeyboardVisible: $isKeyboardVisible,
-                            placeholder: "Enter description",
+                            placeholder: "Email Address",
                             textColor: .black,
                             backgroundColor: Color(.systemGray6),
                             fontSize: 16,
-                            labelText: "Description",
+                            labelText: "Enter a another student email address",
                             labelTextColor: .gray
                         )
                         
@@ -241,7 +241,7 @@ struct AddActivityForm: View {
                     
                 }
                 
-                // Done button
+        
                 Button(action: {
                     if let lat = Double(latitude), let lon = Double(longitude) {
                         let newLocation = Location(
@@ -343,7 +343,7 @@ struct NavigationStep: View {
     }
 }
 
-// Data Model
+
 struct Location: Identifiable {
     let id = UUID()
     let name: String

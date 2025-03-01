@@ -54,7 +54,7 @@ struct EventComponent: View {
     }
 }
 
-// Preview with sample data
+
 struct EventComponent_Previews: PreviewProvider {
     static var previews: some View {
         EventComponent(

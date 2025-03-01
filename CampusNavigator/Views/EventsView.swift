@@ -12,7 +12,7 @@ struct Event: Identifiable, Equatable {
     let time: String
     let imageName: String?
     
-    // Equatable conformance
+
     static func == (lhs: Event, rhs: Event) -> Bool {
         return lhs.id == rhs.id
     }
@@ -62,7 +62,7 @@ struct EventsView: View {
             }
             .padding(.top, 50)
             
-            // Add Event Button at the Bottom Right Corner
+          
             Button(action: {
                 isAddEventPresented = true
             }) {
@@ -181,7 +181,7 @@ struct AddEventView: View {
                 }
                 
                 Button(action: {
-                    // Add event logic here
+           
                     dismiss()
                 }) {
                     Text("Done")
@@ -214,7 +214,7 @@ struct EventDetailView: View {
             
             ScrollView {
                 VStack(spacing: 20) {
-                    // Header with Image
+                    
                     ZStack(alignment: .bottomLeading) {
                         if let imageName = event.imageName {
                             Image(imageName)
@@ -246,20 +246,20 @@ struct EventDetailView: View {
                     .padding(.horizontal)
                     
                     VStack(alignment: .leading, spacing: 20) {
-                        // Date and Time
+                
                         HStack(spacing: 20) {
                             DetailCard(icon: "calendar", title: "Date", value: "\(event.day) \(event.month)")
                             DetailCard(icon: "clock", title: "Time", value: event.time)
                         }
                         
-                        // Description
+              
                         Text(event.description)
                             .font(.body)
                             .lineSpacing(6)
                             .cornerRadius(12)
                             .frame(maxWidth: .infinity)
                         
-                        // Add to Calendar Button
+                
                         Button(action: addToCalendar) {
                             HStack {
                                 Image(systemName: "calendar.badge.plus")
@@ -282,7 +282,7 @@ struct EventDetailView: View {
             }
             .padding(.vertical,90)
             
-            // Close Button
+
             VStack {
                 HStack {
                     Spacer()
@@ -301,7 +301,7 @@ struct EventDetailView: View {
         }
     }
     
-    // Reusable Detail Card Component
+
     struct DetailCard: View {
         let icon: String
         let title: String

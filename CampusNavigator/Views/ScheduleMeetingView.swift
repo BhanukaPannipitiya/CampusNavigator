@@ -13,9 +13,9 @@ struct ScheduleMeetingView: View {
     @State private var randomTime1 = ""
     @State private var randomTime2 = ""
     @State private var isKeyboardVisible = false
-    @State private var selectedTime = "" // Track which time is selected
-    @State private var showConfirmation = false // Track if alert is showing
-    @State private var bookedSlots: Set<String> = [] // Store booked slots (Date + Time)
+    @State private var selectedTime = ""
+    @State private var showConfirmation = false
+    @State private var bookedSlots: Set<String> = []
 
     var body: some View {
         ZStack {
@@ -58,13 +58,12 @@ struct ScheduleMeetingView: View {
                                     date: selectedDate,
                                     time: randomTime1,
                                     isSelected: selectedTime == randomTime1,
-                                    isDisabled: bookedSlots.contains(slot1) // Disable if booked
+                                    isDisabled: bookedSlots.contains(slot1)
                                 )
                             }
                             .buttonStyle(PlainButtonStyle())
                             .disabled(bookedSlots.contains(slot1))
 
-                            // Time slot 2
                             Button(action: {
                                 if !bookedSlots.contains(slot2) {
                                     selectedTime = randomTime2
@@ -74,7 +73,7 @@ struct ScheduleMeetingView: View {
                                     date: selectedDate,
                                     time: randomTime2,
                                     isSelected: selectedTime == randomTime2,
-                                    isDisabled: bookedSlots.contains(slot2) // Disable if booked
+                                    isDisabled: bookedSlots.contains(slot2)
                                 )
                             }
                             .buttonStyle(PlainButtonStyle())
@@ -85,7 +84,7 @@ struct ScheduleMeetingView: View {
                                 buttonText: "Book Now",
                                 buttonBackgroundColor: Color.mint,
                                 buttonTextColor: .white,
-                                fontSize: 18, // Bigger text
+                                fontSize: 18,
                                 action: {
                                     if !selectedTime.isEmpty {
                                         showConfirmation = true
@@ -96,34 +95,34 @@ struct ScheduleMeetingView: View {
                             .disabled(selectedTime.isEmpty)
                             .opacity(selectedTime.isEmpty ? 0.6 : 1.0)
                             
-                            Spacer(minLength: 20) // Add some padding at the bottom
+                            Spacer(minLength: 20)
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 20)
                     .padding(.bottom, 20)
                 }
-                .blur(radius: showConfirmation ? 8 : 0) // Blur when alert is visible
+                .blur(radius: showConfirmation ? 8 : 0)
             }
         }
         .alert("Booking Confirmed!", isPresented: $showConfirmation, actions: {
             Button("OK", role: .cancel) {
-                bookedSlots.insert(formattedDate(selectedDate) + " " + selectedTime) // Mark slot as booked
-                selectedTime = "" // Reset selection
+                bookedSlots.insert(formattedDate(selectedDate) + " " + selectedTime)
+                selectedTime = ""
                 showConfirmation = false
             }
         }, message: {
             Text("Let's meet at \(formattedDate(selectedDate)) at \(selectedTime).")
         })
         .onAppear {
-            // Initialize times when view appears
+           
             randomTime1 = generateRandomTime()
             randomTime2 = generateRandomTime()
         }
         .onChange(of: selectedDate) { _ in
             randomTime1 = generateRandomTime()
             randomTime2 = generateRandomTime()
-            selectedTime = "" // Reset selection when date changes
+            selectedTime = ""
         }
     }
     
@@ -135,10 +134,10 @@ struct ScheduleMeetingView: View {
     }
     
     private func generateRandomTime() -> String {
-        let hour = Int.random(in: 8...18)  // Random hour between 8 AM and 6 PM
-        let minute = Int.random(in: 0...59)  // Random minute between 0 and 59
+        let hour = Int.random(in: 8...18)
+        let minute = Int.random(in: 0...59)
         let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "h:00 a"  // 12-hour format
+        timeFormatter.dateFormat = "h:00 a"
         let calendar = Calendar.current
         var components = DateComponents()
         components.hour = hour
@@ -146,7 +145,7 @@ struct ScheduleMeetingView: View {
         if let randomDate = calendar.date(from: components) {
             return timeFormatter.string(from: randomDate)
         } else {
-            return "10:00 AM"  // Default time
+            return "10:00 AM"
         }
     }
 }

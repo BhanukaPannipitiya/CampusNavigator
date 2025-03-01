@@ -33,7 +33,7 @@ struct LabelText: View {
     }
 }
 
-//Preview with sample data
+
 struct LabelText_Previews: PreviewProvider {
     static var previews: some View {
             LabelText(

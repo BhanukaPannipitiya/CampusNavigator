@@ -40,7 +40,7 @@ struct LabelTextField: View {
     }
 }
 
-//Preview with sample data
+
 struct LabelTextField_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-// MARK: - Components
+
 struct MessageBubble: View {
     let message: Message
     
@@ -84,7 +84,7 @@ struct MessageInputField: View {
     }
 }
 
-// MARK: - Main Chat Detail View
+
 struct ChatDetailView: View {
     let recipient: String
     @State private var messageText = ""
@@ -93,10 +93,8 @@ struct ChatDetailView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Custom header to match design
             HStack {
                 Button(action: {
-                    // Use presentation mode to go back to ChatView
                     presentationMode.wrappedValue.dismiss()
                 }) {
                     Image(systemName: "chevron.left")
@@ -112,7 +110,7 @@ struct ChatDetailView: View {
                 
                 Spacer()
                 
-                // Empty view to balance the layout
+                
                 Image(systemName: "chevron.left")
                     .font(.system(size: 16))
                     .foregroundColor(.clear)
@@ -121,7 +119,7 @@ struct ChatDetailView: View {
             .background(Color(UIColor.systemBackground))
             .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 2)
             
-            // Chat message list
+         
             if messages.isEmpty {
                 Spacer()
                 Text("No messages yet")
@@ -138,13 +136,12 @@ struct ChatDetailView: View {
                 }
             }
             
-            // Message input field
+          
             MessageInputField(messageText: $messageText, onSend: sendMessage)
-                .padding(.bottom, 8)  // Extra padding for the home indicator area
+                .padding(.bottom, 8)
         }
         .navigationBarHidden(true)
         .onAppear {
-            // Load sample messages for preview
             loadSampleMessages()
         }
     }
@@ -163,7 +160,7 @@ struct ChatDetailView: View {
         messages.append(newMessage)
         messageText = ""
         
-        // Simulate a response after a short delay
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             let response = Message(
                 content: "This is a sample response",
@@ -175,7 +172,7 @@ struct ChatDetailView: View {
     }
     
     private func loadSampleMessages() {
-        // Add some sample messages for preview purposes
+       
         let sampleMessages = [
             Message(
                 content: "Hi there! How's your day going?",

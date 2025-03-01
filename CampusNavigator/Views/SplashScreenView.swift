@@ -15,7 +15,7 @@ struct SplashScreenView: View {
 
     var body: some View {
         if isActive {
-            BottomTabBar(selectedTab: .constant(0))
+            LoginView(isLoggedIn: .constant(false))
         } else {
             VStack {
                 VStack {

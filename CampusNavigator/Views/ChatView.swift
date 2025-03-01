@@ -1,13 +1,13 @@
 import SwiftUI
 
-// MARK: - Models
+
 struct Chat: Identifiable {
     let id = UUID()
     let name: String
     let lastMessage: String
     let timestamp: String
     let isGroup: Bool
-    var avatar: String? // Optional avatar image name
+    var avatar: String?
 }
 
 struct Message: Identifiable {
@@ -17,7 +17,7 @@ struct Message: Identifiable {
     let isFromCurrentUser: Bool
 }
 
-// MARK: - Components
+
 struct AvatarView: View {
     let isGroup: Bool
     let avatarName: String?
@@ -76,7 +76,7 @@ struct ChatRow: View {
     }
 }
 
-// MARK: - Main Chats List View
+
 struct ChatView: View {
     @State private var searchText = ""
     @Environment(\.presentationMode) var presentationMode
@@ -93,10 +93,8 @@ struct ChatView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Custom header to match design
             HStack {
                 Button(action: {
-                    // Use presentation mode to go back to HomeView
                     presentationMode.wrappedValue.dismiss()
                 }) {
                     HStack(spacing: 4) {

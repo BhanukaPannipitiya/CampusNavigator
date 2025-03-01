@@ -8,7 +8,7 @@
 import SwiftUI
 import MapKit
 
-// MARK: - Main View
+
 struct ResourceAvailabilityView: View {
     @StateObject private var viewModel = ResourceViewModel()
     @State private var showingReportSheet = false
@@ -18,12 +18,13 @@ struct ResourceAvailabilityView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Map View
+
                 MapView(locations: viewModel.locations, selectedLocation: $selectedLocation)
                     .ignoresSafeArea(edges: .top)
                     .frame(maxHeight: .infinity)
+                    .padding(.top,10)
                 
-                // Location Detail Card (appears when a location is selected)
+      
                 if let location = selectedLocation {
                     VStack {
                         Spacer()
@@ -45,7 +46,6 @@ struct ResourceAvailabilityView: View {
                     .animation(.spring(), value: selectedLocation)
                 }
                 
-                // Top Filters
                 VStack {
                     ResourceFilterBar(
                         selectedFilter: $viewModel.selectedResourceType,
@@ -55,7 +55,7 @@ struct ResourceAvailabilityView: View {
                     Spacer()
                 }
                 
-                // Legend
+     
                 VStack {
                     Spacer()
                     HStack {
@@ -84,7 +84,7 @@ struct ResourceAvailabilityView: View {
                         viewModel.reportOccupancy(location: location, level: level)
                         showingReportSheet = false
                     }
-                    .presentationDetents([.medium])
+                    .presentationDetents([.large])
                 }
             }
             .fullScreenCover(isPresented: $isShowingDetail) {
@@ -99,7 +99,7 @@ struct ResourceAvailabilityView: View {
     }
 }
 
-// MARK: - Map View
+
 struct MapView: View {
     let locations: [CampusLocation]
     @Binding var selectedLocation: CampusLocation?
@@ -120,7 +120,7 @@ struct MapView: View {
     }
 }
 
-// MARK: - Location Marker
+
 struct LocationMarker: View {
     let location: CampusLocation
     let isSelected: Bool
@@ -140,7 +140,6 @@ struct LocationMarker: View {
     }
 }
 
-// MARK: - Location Detail Card
 struct LocationDetailCard: View {
     let location: CampusLocation
     let onReportTap: () -> Void
@@ -149,7 +148,7 @@ struct LocationDetailCard: View {
     
     var body: some View {
         VStack(spacing: 12) {
-            // Header
+          
             HStack {
                 Image(systemName: location.type.iconName)
                     .font(.title2)
@@ -172,7 +171,7 @@ struct LocationDetailCard: View {
             
             Divider()
             
-            // Quick Stats
+     
             HStack(spacing: 20) {
                 VStack(alignment: .leading) {
                     Text("Last Updated")
@@ -206,7 +205,7 @@ struct LocationDetailCard: View {
             
             Divider()
             
-            // Action Buttons
+         
             HStack {
                 Button(action: onReportTap) {
                     HStack {
@@ -245,7 +244,7 @@ struct LocationDetailCard: View {
     }
 }
 
-// MARK: - Report Occupancy View
+
 struct ReportOccupancyView: View {
     let location: CampusLocation
     let onSubmit: (OccupancyLevel) -> Void
@@ -323,11 +322,12 @@ struct ReportOccupancyView: View {
                     }
                 }
             }
+//            .padding(.top,20)
         }
     }
 }
 
-// MARK: - Occupancy Option Button
+
 struct OccupancyOptionButton: View {
     let level: OccupancyLevel
     let isSelected: Bool
@@ -371,7 +371,7 @@ struct OccupancyOptionButton: View {
     }
 }
 
-// MARK: - Filter Bar
+
 struct ResourceFilterBar: View {
     @Binding var selectedFilter: ResourceType
     let filters: [ResourceType]
@@ -401,7 +401,6 @@ struct ResourceFilterBar: View {
     }
 }
 
-// MARK: - Occupancy Legend
 struct OccupancyLegend: View {
     var body: some View {
         HStack(spacing: 12) {
@@ -424,7 +423,7 @@ struct OccupancyLegend: View {
     }
 }
 
-// MARK: - Detailed Location View
+
 struct LocationDetailView: View {
     let location: CampusLocation
     @Environment(\.dismiss) private var dismiss
@@ -434,9 +433,9 @@ struct LocationDetailView: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 16) {
-                    // Header Image
+         
                     ZStack(alignment: .bottomLeading) {
-                        Image("location_placeholder") // Use actual location image
+                        Image("location_placeholder")
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(height: 200)
@@ -466,7 +465,7 @@ struct LocationDetailView: View {
                         .padding(.bottom, 12)
                     }
                     
-                    // Location Name and Occupancy
+              
                     HStack {
                         VStack(alignment: .leading) {
                             Text(location.name)
@@ -491,7 +490,7 @@ struct LocationDetailView: View {
                     
                     Divider()
                     
-                    // Forecast
+           
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Today's Forecast")
                             .font(.headline)
@@ -523,7 +522,7 @@ struct LocationDetailView: View {
                     
                     Divider()
                     
-                    // Features
+          
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Features")
                             .font(.headline)
@@ -538,7 +537,7 @@ struct LocationDetailView: View {
                     
                     Divider()
                     
-                    // Recent Reports
+   
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Recent Reports")
                             .font(.headline)
@@ -584,7 +583,7 @@ struct LocationDetailView: View {
     }
 }
 
-// MARK: - Feature Item
+
 struct FeatureItem: View {
     let icon: String
     let text: String
@@ -608,8 +607,7 @@ struct FeatureItem: View {
     }
 }
 
-// MARK: - Models
-// MARK: - Models
+
 struct CampusLocation: Identifiable, Equatable {
     let id = UUID()
     let name: String
@@ -622,12 +620,12 @@ struct CampusLocation: Identifiable, Equatable {
     let capacity: Int
     var hasNotifications: Bool = false
     
-    // Make CampusLocation conform to Equatable
+
     static func == (lhs: CampusLocation, rhs: CampusLocation) -> Bool {
         return lhs.id == rhs.id
     }
     
-    // Sample data
+ 
     static let samples = [
         CampusLocation(
             name: "Main Library",
@@ -724,7 +722,7 @@ enum OccupancyLevel: String, CaseIterable {
     }
     
     static func getForecastColor(for hour: Int, location: CampusLocation) -> Color {
-        // This would be replaced with actual forecast data
+
         let patterns: [[OccupancyLevel]] = [
             [.low, .low, .moderate, .high, .moderate, .low],
             [.low, .moderate, .high, .high, .high, .moderate],
@@ -736,18 +734,18 @@ enum OccupancyLevel: String, CaseIterable {
     }
 }
 
-// MARK: - View Model
+
 class ResourceViewModel: ObservableObject {
     @Published var locations: [CampusLocation] = []
     @Published var selectedResourceType: ResourceType = .all
     
     func fetchLocations() {
-        // In a real app, this would fetch from an API
+
         locations = CampusLocation.samples
     }
     
     func refreshData() {
-        // Simulate a refresh
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.fetchLocations()
         }
@@ -760,7 +758,7 @@ class ResourceViewModel: ObservableObject {
     }
     
     func reportOccupancy(location: CampusLocation, level: OccupancyLevel) {
-        // In a real app, this would send a report to the server
+ 
         if let index = locations.firstIndex(where: { $0.id == location.id }) {
             var updatedLocation = locations[index]
             updatedLocation.occupancyLevel = level
@@ -775,5 +773,12 @@ class ResourceViewModel: ObservableObject {
         } else {
             return locations.filter { $0.type == type }
         }
+    }
+}
+
+
+struct ResourceAvailabilityView_Previews: PreviewProvider {
+    static var previews: some View {
+        ResourceAvailabilityView()
     }
 }
